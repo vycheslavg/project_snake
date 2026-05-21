@@ -152,7 +152,24 @@ namespace SnakeGame
 
 	void GrowSnake(Snake& snake)
 	{
-		snake.head->setPosition(snake.head->getPosition() + GetDirectionVector(snake.direction));
+		auto nextTail = std::next(snake.tail);
+		if (nextTail == snake.body.end())
+		{
+			return;
+		}
+
+		sf::Vector2f tailDirection = GetVectorBetweenSprites(*snake.tail, *nextTail);
+		float distance = GetManhattanDistanceBetweenSprites(*snake.tail, *nextTail);
+		if (distance == 0.f)
+		{
+			return;
+		}
+
+		sf::Sprite newTail = *snake.tail;
+		newTail.setPosition(snake.tail->getPosition() - tailDirection * SNAKE_SIZE / distance);
+		snake.body.push_front(newTail);
+		snake.tail = snake.body.begin();
+		SetTailSprite(snake, snake.tail);
 	}
 
 	void DrawSnake(Snake& snake, sf::RenderWindow& window)

@@ -24,6 +24,18 @@ namespace SnakeGame
 
 		InitSnake(data.snake);
 
+		switch (game.difficulty)
+		{
+		case GameDifficulty::Easy:
+			data.snake.speed = INITIAL_SPEED * 0.75f;
+			break;
+		case GameDifficulty::Hard:
+			data.snake.speed = INITIAL_SPEED * 1.5f;
+			break;
+		default:
+			break;
+		}
+
 
 		InitSprite(data.apple, APPLE_SIZE, APPLE_SIZE, data.appleTexture);
 		SetSpriteRandomPosition(data.apple, data.background.getGlobalBounds(), data.snake.body);
@@ -90,7 +102,8 @@ namespace SnakeGame
 		MoveSnake(data.snake, timeDelta);
 
 		if (CheckSpriteIntersection(*data.snake.head, data.apple)) {
-			data.eatAppleSound.play();
+			if ((std::uint8_t)game.options & (std::uint8_t)GameOptions::SoundEnabled)
+				data.eatAppleSound.play();
 
 			GrowSnake(data.snake);
 
@@ -103,14 +116,27 @@ namespace SnakeGame
 			}
 		}
 
-		bool isGameFinished = !((std::uint8_t)game.options & (std::uint8_t)GameOptions::InfiniteApples);
+		bool isGameFinished = false;
+
+		const bool isInfiniteApples = ((std::uint8_t)game.options & (std::uint8_t)GameOptions::InfiniteApples) != 0;
+		if (!isInfiniteApples)
+		{
+			int applesToWin = (MIN_APPLES + MAX_APPLES) / 2;
+			if (game.difficulty == GameDifficulty::Easy)
+				applesToWin = MIN_APPLES;
+			else if (game.difficulty == GameDifficulty::Hard)
+				applesToWin = MAX_APPLES;
+
+			isGameFinished = data.numEatenApples >= applesToWin;
+		}
 
 		if (isGameFinished
 			|| !HasSnakeCollisionWithRect(data.snake, data.background.getGlobalBounds())
 			|| CheckSnakeCollisionWithHimself(data.snake)	
 			|| FullCheckCollisions(data.rocks.begin(), data.rocks.end(), *data.snake.head)) 
 		{
-			data.gameOverSound.play();
+			if ((std::uint8_t)game.options & (std::uint8_t)GameOptions::SoundEnabled)
+				data.gameOverSound.play();
 
 
 			game.recordsTable[game.playerName] = std::max(game.recordsTable[game.playerName], data.numEatenApples);

@@ -28,6 +28,7 @@ namespace SnakeGame
 		MenuItem optionsItem;
 		MenuItem optionsInfiniteApplesItem;
 		MenuItem optionsWithAccelerationItem;
+		MenuItem optionsSoundItem;
 
 		MenuItem recordsItem;
 		MenuItem exitGameItem;

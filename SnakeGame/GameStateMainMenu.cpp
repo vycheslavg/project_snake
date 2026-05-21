@@ -8,7 +8,7 @@ namespace SnakeGame
 	{
 		assert(data.font.loadFromFile(RESOURCES_PATH + "Fonts/Roboto-Regular.ttf"));
 
-		// ¬вод имени
+
 		data.nameHintText.setString("Enter your name:");
 		data.nameHintText.setFont(data.font);
 		data.nameHintText.setCharacterSize(40);
@@ -34,12 +34,11 @@ namespace SnakeGame
 		data.menu.rootItem.children.push_back(&data.recordsItem);
 		data.menu.rootItem.children.push_back(&data.exitGameItem);
 
-		// START GAME
+		
 		data.startGameItem.text.setString("Start Game");
 		data.startGameItem.text.setFont(data.font);
 		data.startGameItem.text.setCharacterSize(24);
 
-		// DIFFICULTY MENU
 		data.difficultyItem.text.setString("Select Difficulty");
 		data.difficultyItem.text.setFont(data.font);
 		data.difficultyItem.text.setCharacterSize(24);
@@ -69,7 +68,6 @@ namespace SnakeGame
 		data.hardItem.text.setFont(data.font);
 		data.hardItem.text.setCharacterSize(24);
 
-		// OPTIONS
 		data.optionsItem.text.setString("Options");
 		data.optionsItem.text.setFont(data.font);
 		data.optionsItem.text.setCharacterSize(24);
@@ -85,6 +83,7 @@ namespace SnakeGame
 
 		data.optionsItem.children.push_back(&data.optionsInfiniteApplesItem);
 		data.optionsItem.children.push_back(&data.optionsWithAccelerationItem);
+		data.optionsItem.children.push_back(&data.optionsSoundItem);
 
 		data.optionsInfiniteApplesItem.text.setFont(data.font);
 		data.optionsInfiniteApplesItem.text.setCharacterSize(24);
@@ -92,12 +91,13 @@ namespace SnakeGame
 		data.optionsWithAccelerationItem.text.setFont(data.font);
 		data.optionsWithAccelerationItem.text.setCharacterSize(24);
 
-		// RECORDS
+				data.optionsSoundItem.text.setFont(data.font);
+		data.optionsSoundItem.text.setCharacterSize(24);
+
 		data.recordsItem.text.setString("Records");
 		data.recordsItem.text.setFont(data.font);
 		data.recordsItem.text.setCharacterSize(24);
 
-		// EXIT
 		data.exitGameItem.text.setString("Exit Game");
 		data.exitGameItem.text.setFont(data.font);
 		data.exitGameItem.text.setCharacterSize(24);
@@ -132,7 +132,6 @@ namespace SnakeGame
 
 	void HandleGameStateMainMenuWindowEvent(GameStateMainMenuData& data, Game& game, const sf::Event& event)
 	{
-		// Ёкран ввода имени
 		if (data.isEnteringName)
 		{
 			if (event.type == sf::Event::TextEntered)
@@ -200,6 +199,8 @@ namespace SnakeGame
 					game.options = (GameOptions)((std::uint8_t)game.options ^ (std::uint8_t)GameOptions::InfiniteApples);
 				else if (data.menu.selectedItem == &data.optionsWithAccelerationItem)
 					game.options = (GameOptions)((std::uint8_t)game.options ^ (std::uint8_t)GameOptions::WithAcceleration);
+				else if (data.menu.selectedItem == &data.optionsSoundItem)
+					game.options = (GameOptions)((std::uint8_t)game.options ^ (std::uint8_t)GameOptions::SoundEnabled);
 				else if (data.menu.selectedItem == &data.recordsItem)
 					PushGameState(game, GameStateType::Records, true);
 				else if (data.menu.selectedItem == &data.exitGameItem)
@@ -232,6 +233,9 @@ namespace SnakeGame
 
 		bool isWithAcceleration = ((std::uint8_t)game.options & (std::uint8_t)GameOptions::WithAcceleration) != 0;
 		data.optionsWithAccelerationItem.text.setString("With Acceleration: " + std::string(isWithAcceleration ? "On" : "Off"));
+
+		bool isSoundEnabled = ((std::uint8_t)game.options & (std::uint8_t)GameOptions::SoundEnabled) != 0;
+		data.optionsSoundItem.text.setString("Sound: " + std::string(isSoundEnabled ? "On" : "Off"));
 	}
 
 	void DrawGameStateMainMenu(GameStateMainMenuData& data, Game& game, sf::RenderWindow& window)

@@ -12,8 +12,9 @@ namespace SnakeGame
 	{
 		InfiniteApples = 1 << 0,
 		WithAcceleration = 1 << 1,
+		SoundEnabled = 1 << 2,
 
-		Default = InfiniteApples | WithAcceleration,
+		Default = InfiniteApples | WithAcceleration | SoundEnabled,
 		Empty = 0
 	};
 

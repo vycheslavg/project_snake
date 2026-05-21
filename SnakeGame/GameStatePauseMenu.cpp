@@ -62,7 +62,6 @@ namespace SnakeGame
 				}
 			}
 
-			Orientation orientation = data.menu.selectedItem->parent->childrenOrientation;
 			if (event.key.code == sf::Keyboard::W)
 			{
 				SelectPreviousMenuItem(data.menu);
